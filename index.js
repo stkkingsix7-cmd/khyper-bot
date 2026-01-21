@@ -1,4 +1,6 @@
 require("dotenv").config();
+const express = require("express");
+const app = express();
 const {
   Client,
   GatewayIntentBits,
@@ -14,6 +16,7 @@ const {
   SlashCommandBuilder
 } = require("discord.js");
 
+// Configurar el cliente de Discord
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -22,6 +25,18 @@ const client = new Client({
   partials: [Partials.Channel]
 });
 
+// Servidor web con Express para mantener la aplicación viva en Render
+const PORT = process.env.PORT || 3000;
+
+app.get("/", (req, res) => {
+  res.send("Bot Khyper activo 🚀");
+});
+
+app.listen(PORT, () => {
+  console.log(`Servidor web escuchando en el puerto ${PORT}`);
+});
+
+// Canales y configuración
 const CANAL_COMPRAS = "1436800312399757473";
 const CANAL_BIENVENIDAS = "1339682582886879254";
 const OWNER_ID = "1232431026802917467"; // Reemplaza con tu ID de dueño
@@ -87,7 +102,6 @@ client.on("guildMemberAdd", async (member) => {
 
 // ================= INTERACTIONS =================
 client.on("interactionCreate", async (interaction) => {
-
   if (interaction.isChatInputCommand()) {
     const cmd = interaction.commandName;
 
@@ -165,7 +179,6 @@ client.on("interactionCreate", async (interaction) => {
   }
 
   // ---------- BOTONES ----------
-
   if (interaction.isButton()) {
     const guild = interaction.guild;
     const user = interaction.user;
@@ -246,4 +259,5 @@ client.on("interactionCreate", async (interaction) => {
   }
 });
 
+// Iniciar el bot con el token de Discord
 client.login(process.env.TOKEN);
